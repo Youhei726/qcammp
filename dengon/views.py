@@ -47,3 +47,6 @@ def list(request):
 		entities = dengon.objects.all()
 
 	return render(request, 'list.html', {'entities':entities})
+
+def debug(request):
+	return render(request, 'debug.html')
