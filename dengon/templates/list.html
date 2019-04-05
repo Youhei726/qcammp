@@ -127,8 +127,12 @@
                         	</td>
                         {% else %}
                         	<td width="30%" align=center>
-                        		{% if entity.message == '' %}
+                        		{% if entity.message == '' and entity.phoneNumber == '' %}
                         		先方へ電話してください
+                        		{% elif entity.message == '' %}
+                        		<span class="text-primary"  data-original-title="phone:{{entity.phoneNumber}}" data-toggle="tooltip">先方へ電話してください</span>
+                        		{% elif entity.phoneNumber == '' %}
+                        		<span class="text-primary"  data-original-title="message:{{entity.message}}" data-toggle="tooltip">先方へ電話してください</span>
                         		{% else %}
                         		<span class="text-primary"  data-original-title="message:{{entity.message}} phone:{{entity.phoneNumber}}" data-toggle="tooltip">先方へ電話してください</span>
                         		{% endif %}
