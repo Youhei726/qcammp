@@ -39,7 +39,6 @@ def list(request):
 			dateTime__date=request.POST['dateTime'],
 			check=request.POST['check'])
 		print(entities.query)
-	elif 'update_task' in request.POST:
 		#update_task
 		print('debug')
 	else:
@@ -50,6 +49,14 @@ def list(request):
 
 def debug(request):
 	if 'deleteall' in request.POST:
-		dengon.objects.all().delete()
-	entities = dengon.objects.all()
-	return render(request, 'debug.html', {'entities':entities})
+		entities = dengon.objects.all().delete()
+	elif 'search' in request.POST:
+		#search with query
+		entities = dengon.objects.filter(nameTo__icontains=request.POST['nameTo'],
+			nameTakenBy__icontains=request.POST['nameTakenBy'],
+			dateTime__date=request.POST['dateTime'],
+			check=request.POST['check'])
+		print(entities.query)
+	else:
+		entities = dengon.objects.all()
+	return render(request, 'debug.html', {'entities':entities, 'sql':entities.query})
