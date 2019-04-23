@@ -49,4 +49,7 @@ def list(request):
 	return render(request, 'list.html', {'entities':entities})
 
 def debug(request):
-	return render(request, 'debug.html')
+	if 'deleteall' in request.POST:
+		dengon.objects.all().delete()
+	entities = dengon.objects.all()
+	return render(request, 'debug.html', {'entities':entities})

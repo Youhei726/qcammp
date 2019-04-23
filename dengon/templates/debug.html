@@ -1,1 +1,71 @@
-debug画面
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>DEN-GON</title>
+	<!-- BootstrapのCSS読み込み -->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+	<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+	<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+	<link rel="shortcut icon" href="{% static './image/favicon.ico' %}" type="image/vnd.microsoft.icon">
+</head>
+
+<body>
+<form action="debug" method="POST">{% csrf_token %}
+    <div class="row">
+        <input type="hidden" name="deleteall" value="deleteall">
+        <div class="col-sm-6 mx-auto text-center mb-4"><input type="submit" class="btn btn-danger" value="全件削除"></div>
+    </div>
+</form>
+    
+{% for entity in entities %}
+<form action="update_task" method="POST">{% csrf_token %}
+<div class="row">
+<!-- 時間 -->
+<div class="col-md-1">{{entity.dateTime|date:"G:i"}} </div>
+<!-- To -->
+<div class="col-md-2">{{entity.nameTo}}</div>
+<!-- From -->
+<div class="col-md-2">{{entity.nameFrom}}</div>
+<!-- 受付 -->
+<div class="col-md-2">{{entity.nameTakenBy}}</div>
+    <!-- 用件 -->
+             {% if entity.requirement == '0' %}
+            <div class="col-md-3">
+                {% if entity.message == '' %}
+                電話がありました
+                {% else %}
+                <span class="text-primary"  data-original-title="{{entity.message}}" data-toggle="tooltip">電話がありました</span>
+                {% endif %}
+            </div>
+        {% elif entity.requirement == '1' %}
+            <div class="col-md-3">
+                {% if entity.message == '' %}
+                また電話します
+                {% else %}
+                <span class="text-primary"  data-original-title="{{entity.message}}" data-toggle="tooltip">また電話します</span>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="col-md-3">
+                {% if entity.message == '' and entity.phoneNumber == '' %}
+                先方へ電話してください
+                {% elif entity.message == '' %}
+                <span class="text-primary"  data-original-title="phone:{{entity.phoneNumber}}" data-toggle="tooltip">先方へ電話してください</span>
+                {% elif entity.phoneNumber == '' %}
+                <span class="text-primary"  data-original-title="message:{{entity.message}}" data-toggle="tooltip">先方へ電話してください</span>
+                {% else %}
+                <span class="text-primary"  data-original-title="message:{{entity.message}} phone:{{entity.phoneNumber}}" data-toggle="tooltip">先方へ電話してください</span>
+                {% endif %}
+            </div>
+        {% endif %}
+            <!-- 伝言確認 -->
+            <div class="col-md-2 checkbox text-center">
+                                <input type="checkbox" checked data-toggle="toggle" id="{{ entity.id }}" data-onstyle="info" data-on="未" data-off="済">
+                                </div>
+</div>
+{% endfor %}
+</body>
+</html>
